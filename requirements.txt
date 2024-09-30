@@ -1,0 +1,4 @@
+Flask 
+pytube 
+python-dotenv 
+requests
