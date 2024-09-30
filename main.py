@@ -4,7 +4,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()  # Charge les variables d'environnement à partir d'un fichier .env
+load_dotenv()  # Charger les variables d'environnement à partir d'un fichier .env
 
 app = Flask(__name__)
 
@@ -46,6 +46,8 @@ def download_video():
     if not video_id:
         return jsonify({'error': 'videoId non fourni'}), 400
 
+    file_path = None  # Initialiser file_path à None
+
     try:
         # Récupérer l'URL de la vidéo
         yt = YouTube(f'https://www.youtube.com/watch?v={video_id}')
@@ -62,12 +64,13 @@ def download_video():
         stream.download(filename=file_path)
 
         return send_file(file_path, as_attachment=True)
-    
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
     finally:
         # Nettoyage : Supprimer le fichier après l'envoi
-        if os.path.exists(file_path):
+        if file_path and os.path.exists(file_path):
             os.remove(file_path)
 
 if __name__ == '__main__':
